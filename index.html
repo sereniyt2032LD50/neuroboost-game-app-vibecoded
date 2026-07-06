@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroBoost Hub // Cognitive Development Training</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo" id="nav-logo">
+            <i class="fa-solid fa-brain"></i>
+            <span>NeuroBoost</span>
+        </div>
+        <nav class="nav-links">
+            <button class="btn-nav active" id="btn-nav-dashboard"><i class="fa-solid fa-table-cells-large"></i> Dashboard</button>
+            <button class="btn-nav" id="btn-nav-stats"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+
+        <!-- DASHBOARD SCREEN -->
+        <section id="screen-dashboard" class="screen active">
+            <div class="welcome-section">
+                <h1>Optimize Your Brain Performance</h1>
+                <p>Train your cognitive faculties with scientifically inspired daily training games.</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="dashboard-stats">
+                <div class="glass-card stat-box">
+                    <div class="stat-label">Neuro Score</div>
+                    <div class="stat-val" id="val-neuro-score">0</div>
+                    <div class="stat-label">Cognitive Index</div>
+                </div>
+                <div class="glass-card stat-box">
+                    <div class="stat-label">Streak</div>
+                    <div class="stat-val" id="val-streak">0d</div>
+                    <div class="stat-label">Daily Training</div>
+                </div>
+                <div class="glass-card stat-box">
+                    <div class="stat-label">Sessions</div>
+                    <div class="stat-val" id="val-sessions">0</div>
+                    <div class="stat-label">Completed Runs</div>
+                </div>
+            </div>
+
+            <!-- Games Grid -->
+            <div class="game-grid">
+                <!-- Memory Matrix -->
+                <div class="glass-card game-card" data-game="matrix">
+                    <div class="game-card-header">
+                        <i class="fa-solid fa-border-all game-icon"></i>
+                        <h3>Memory Matrix</h3>
+                        <p>Recall spatial grids under increasing dimensions. Boosts working memory and spatial planning capabilities.</p>
+                    </div>
+                    <div class="game-card-footer">
+                        <div class="game-stat">High Score: <span id="high-matrix">0</span></div>
+                        <button class="btn-play">Train</button>
+                    </div>
+                </div>
+
+                <!-- Stroop Reflex -->
+                <div class="glass-card game-card" data-game="stroop">
+                    <div class="game-card-header">
+                        <i class="fa-solid fa-bolt game-icon"></i>
+                        <h3>Stroop Reflex</h3>
+                        <p>Select target colors while filtering out conflicting text cues. Enhances selective attention and response speed.</p>
+                    </div>
+                    <div class="game-card-footer">
+                        <div class="game-stat">High Score: <span id="high-stroop">0</span></div>
+                        <button class="btn-play">Train</button>
+                    </div>
+                </div>
+
+                <!-- Schulte Grid -->
+                <div class="glass-card game-card" data-game="schulte">
+                    <div class="game-card-header">
+                        <i class="fa-solid fa-arrow-down-1-9 game-icon"></i>
+                        <h3>Schulte Grid</h3>
+                        <p>Locate numbers in ascending order from a scrambled grid. Strengthens peripheral vision and visual search speed.</p>
+                    </div>
+                    <div class="game-card-footer">
+                        <div class="game-stat">Best Time: <span id="high-schulte">--</span></div>
+                        <button class="btn-play">Train</button>
+                    </div>
+                </div>
+
+                <!-- Equation Rush -->
+                <div class="glass-card game-card" data-game="math">
+                    <div class="game-card-header">
+                        <i class="fa-solid fa-calculator game-icon"></i>
+                        <h3>Equation Rush</h3>
+                        <p>Solve arithmetic equations under rapid time limits. Strengthens logic, concentration, and quantitative speed.</p>
+                    </div>
+                    <div class="game-card-footer">
+                        <div class="game-stat">High Score: <span id="high-math">0</span></div>
+                        <button class="btn-play">Train</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS SCREEN -->
+        <section id="screen-stats" class="screen">
+            <div class="welcome-section" style="margin-bottom: 2rem;">
+                <h1>Cognitive Analytics</h1>
+                <p>Track your development curve and analyze performance across multiple dimensions.</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="glass-card">
+                    <h3>Performance Trajectory</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="analytics-chart" width="700" height="350"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card">
+                    <h3>Recent Training Log</h3>
+                    <div class="history-list" id="history-log">
+                        <div class="history-item" style="color: var(--text-secondary); border: none; justify-content: center; padding-top: 2rem;">
+                            No training sessions logged yet.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 1: MEMORY MATRIX -->
+        <section id="screen-game-matrix" class="screen">
+            <div class="game-layout">
+                <div class="game-sidebar">
+                    <div class="glass-card sidebar-card">
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Level</div>
+                            <div class="sidebar-stat-val" id="matrix-lvl">1</div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Score</div>
+                            <div class="sidebar-stat-val" id="matrix-score">0</div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Strikes</div>
+                            <div class="sidebar-stat-val" id="matrix-strikes">
+                                <i class="fa-regular fa-circle" id="strike-1"></i>
+                                <i class="fa-regular fa-circle" id="strike-2"></i>
+                                <i class="fa-regular fa-circle" id="strike-3"></i>
+                            </div>
+                        </div>
+                        <button class="btn-quit" id="btn-quit-matrix">Quit Session</button>
+                    </div>
+                </div>
+                
+                <div class="glass-card game-play-board">
+                    <div class="flash-effect" id="flash-matrix"></div>
+                    <!-- Start Overlay -->
+                    <div class="start-overlay" id="overlay-matrix">
+                        <h2>Memory Matrix</h2>
+                        <p>Look at the grid pattern. After the squares disappear, click the positions they previously occupied. The board will expand as you succeed.</p>
+                        <button class="btn-start" id="btn-start-matrix">Initialize Grid</button>
+                    </div>
+                    <!-- Play Area -->
+                    <div class="matrix-grid" id="matrix-grid-board"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 2: STROOP REFLEX -->
+        <section id="screen-game-stroop" class="screen">
+            <div class="game-layout">
+                <div class="game-sidebar">
+                    <div class="glass-card sidebar-card">
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Time Remaining</div>
+                            <div class="sidebar-stat-val" id="stroop-time">30s</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="stroop-progress"></div>
+                            </div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Score</div>
+                            <div class="sidebar-stat-val" id="stroop-score">0</div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Accuracy</div>
+                            <div class="sidebar-stat-val" id="stroop-acc">--%</div>
+                        </div>
+                        <button class="btn-quit" id="btn-quit-stroop">Quit Session</button>
+                    </div>
+                </div>
+                
+                <div class="glass-card game-play-board">
+                    <div class="flash-effect" id="flash-stroop"></div>
+                    <!-- Start Overlay -->
+                    <div class="start-overlay" id="overlay-stroop">
+                        <h2>Stroop Reflex</h2>
+                        <p>Pay strict attention to the colored word and instructions. You will be asked to either match the font color OR the written text meaning. Respond as fast as possible.</p>
+                        <button class="btn-start" id="btn-start-stroop">Start Reflex Test</button>
+                    </div>
+                    <!-- Play Area -->
+                    <div class="stroop-instruction" id="stroop-task-txt">Match Color</div>
+                    <div class="stroop-display" id="stroop-word-txt">BLUE</div>
+                    <div class="stroop-options" id="stroop-options-box">
+                        <button class="btn-stroop" data-color="red">Red</button>
+                        <button class="btn-stroop" data-color="blue">Blue</button>
+                        <button class="btn-stroop" data-color="green">Green</button>
+                        <button class="btn-stroop" data-color="yellow">Yellow</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 3: SCHULTE GRID -->
+        <section id="screen-game-schulte" class="screen">
+            <div class="game-layout">
+                <div class="game-sidebar">
+                    <div class="glass-card sidebar-card">
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Timer</div>
+                            <div class="sidebar-stat-val" id="schulte-time">0.00s</div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Target Number</div>
+                            <div class="sidebar-stat-val" id="schulte-target">1</div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Grid Size</div>
+                            <div class="sidebar-stat-val" id="schulte-lvl">4 x 4</div>
+                        </div>
+                        <button class="btn-quit" id="btn-quit-schulte">Quit Session</button>
+                    </div>
+                </div>
+                
+                <div class="glass-card game-play-board">
+                    <div class="flash-effect" id="flash-schulte"></div>
+                    <!-- Start Overlay -->
+                    <div class="start-overlay" id="overlay-schulte">
+                        <h2>Schulte Grid</h2>
+                        <p>Click the numbers from 1 to 16 (or 1 to 25) in ascending order. Keep your focus on the center of the grid and use your peripheral vision to find targets quickly.</p>
+                        <button class="btn-start" id="btn-start-schulte">Initialize Grid</button>
+                    </div>
+                    <!-- Play Area -->
+                    <div class="schulte-grid" id="schulte-grid-board"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 4: EQUATION RUSH -->
+        <section id="screen-game-math" class="screen">
+            <div class="game-layout">
+                <div class="game-sidebar">
+                    <div class="glass-card sidebar-card">
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Time Remaining</div>
+                            <div class="sidebar-stat-val" id="math-time">30s</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="math-progress"></div>
+                            </div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Score</div>
+                            <div class="sidebar-stat-val" id="math-score">0</div>
+                        </div>
+                        <div class="sidebar-stat">
+                            <div class="sidebar-stat-label">Combo Multiplier</div>
+                            <div class="sidebar-stat-val" id="math-combo">1x</div>
+                        </div>
+                        <button class="btn-quit" id="btn-quit-math">Quit Session</button>
+                    </div>
+                </div>
+                
+                <div class="glass-card game-play-board">
+                    <div class="flash-effect" id="flash-math"></div>
+                    <!-- Start Overlay -->
+                    <div class="start-overlay" id="overlay-math">
+                        <h2>Equation Rush</h2>
+                        <p>Determine whether the arithmetic equations shown on the screen are correct. Correct responses build your combo and extend the clock.</p>
+                        <button class="btn-start" id="btn-start-math">Initialize Equation Rush</button>
+                    </div>
+                    <!-- Play Area -->
+                    <div class="math-equation" id="math-expr">12 + 5 = 17</div>
+                    <div class="math-options">
+                        <button class="btn-math yes" id="btn-math-yes"><i class="fa-solid fa-check"></i> Correct</button>
+                        <button class="btn-math no" id="btn-math-no"><i class="fa-solid fa-xmark"></i> Incorrect</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Sound Toggle -->
+    <div class="sound-toggle" id="sound-btn" title="Toggle Sound">
+        <i class="fa-solid fa-volume-high"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/audio.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/matrix.js"></script>
+    <script src="js/stroop.js"></script>
+    <script src="js/schulte.js"></script>
+    <script src="js/math.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

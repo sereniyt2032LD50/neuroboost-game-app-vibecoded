@@ -98,10 +98,10 @@ class MemoryMatrixGame {
             this.targets.add(randIndex);
         }
 
-        // Show targets after a short delay
-        setTimeout(() => {
+        // Run countdown before showing targets
+        window.runCountdown(this.board, () => {
             this.showTargets();
-        }, 600);
+        });
     }
 
     showTargets() {

@@ -21,6 +21,9 @@ class MathRushGame {
         this.btnStart.addEventListener('click', () => this.startGame());
         this.btnYes.addEventListener('click', () => this.handleAnswer(true));
         this.btnNo.addEventListener('click', () => this.handleAnswer(false));
+
+        // Bind keyboard event handler
+        this.boundKeyHandler = this.handleKeyDown.bind(this);
     }
 
     startGame() {
@@ -34,6 +37,13 @@ class MathRushGame {
         
         if (this.timer) clearInterval(this.timer);
         this.timer = setInterval(() => this.tick(), 100);
+
+        // Bind keyboard listener
+        window.addEventListener('keydown', this.boundKeyHandler);
+    }
+
+    cleanup() {
+        window.removeEventListener('keydown', this.boundKeyHandler);
     }
 
     getComboMultiplier() {
@@ -156,6 +166,15 @@ class MathRushGame {
         this.equationDisplay.innerHTML = `${expr} = ${displayResult}`;
     }
 
+    handleKeyDown(e) {
+        if (this.timeRemaining <= 0) return;
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+            this.handleAnswer(false);
+        } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+            this.handleAnswer(true);
+        }
+    }
+
     handleAnswer(userSaysTrue) {
         if (this.timeRemaining <= 0) return;
         
@@ -165,13 +184,18 @@ class MathRushGame {
             // Correct answer
             this.comboCount += 1;
             const mult = this.getComboMultiplier();
-            this.score += 10 * mult;
+            const pointsAdded = 10 * mult;
+            this.score += pointsAdded;
             
             // Add time reward: +1.5s, capped at 30.0s
             this.timeRemaining = Math.min(30.0, this.timeRemaining + 1.5);
             
             Sound.playTone(500 + (this.comboCount * 20), 'sine', 0.08, 0.08);
             this.triggerFlash('correct');
+            
+            // UX floating indicators
+            window.showFloatingIndicator(this.scoreDisplay, `+${pointsAdded}`, true);
+            window.showFloatingIndicator(this.timeDisplay, `+1.5s`, true);
         } else {
             // Incorrect answer
             this.comboCount = 0;
@@ -181,6 +205,9 @@ class MathRushGame {
             
             Sound.playIncorrect();
             this.triggerFlash('incorrect');
+            
+            // UX floating indicators
+            window.showFloatingIndicator(this.timeDisplay, `-3.0s`, false);
             
             const boardEl = document.querySelector('#screen-game-math .game-play-board');
             if (boardEl) {
@@ -203,6 +230,7 @@ class MathRushGame {
 
     endGame() {
         clearInterval(this.timer);
+        this.cleanup();
         Sound.playGameOver();
         
         const isNewHigh = Storage.saveScore('math', this.score);

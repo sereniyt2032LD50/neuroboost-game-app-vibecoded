@@ -154,6 +154,7 @@ class NeuroDashboard {
             if (gameObj.timer) clearInterval(gameObj.timer);
             if (gameObj.gameActive !== undefined) gameObj.gameActive = false;
             if (gameObj.interactive !== undefined) gameObj.interactive = false;
+            if (typeof gameObj.cleanup === 'function') gameObj.cleanup();
             
             this.activeGameKey = null;
         }
@@ -366,7 +367,75 @@ class NeuroDashboard {
     }
 }
 
+// Global Helpers for UX Animation & Usability
+window.showFloatingIndicator = function(targetEl, text, isPositive) {
+    if (!targetEl) return;
+    const container = targetEl.parentElement;
+    if (!container) return;
+    
+    // Ensure parent is relative or absolute
+    const computedStyle = window.getComputedStyle(container);
+    if (computedStyle.position === 'static') {
+        container.style.position = 'relative';
+    }
+    
+    const alert = document.createElement('div');
+    alert.className = `floating-alert ${isPositive ? 'positive' : 'negative'}`;
+    alert.textContent = text;
+    
+    // Position relatively to targetEl inside parent
+    const rect = targetEl.getBoundingClientRect();
+    const parentRect = container.getBoundingClientRect();
+    
+    alert.style.left = `${rect.left - parentRect.left + (rect.width / 2) - 15}px`;
+    alert.style.top = `${rect.top - parentRect.top - 15}px`;
+    
+    container.appendChild(alert);
+    setTimeout(() => alert.remove(), 800);
+};
+
+window.runCountdown = function(boardEl, callback) {
+    // Save current interactive elements
+    const originalChildren = Array.from(boardEl.children);
+    
+    // Hide original children, except flash effect
+    originalChildren.forEach(child => {
+        if (!child.classList.contains('flash-effect')) {
+            child.style.visibility = 'hidden';
+        }
+    });
+    
+    // Create countdown element
+    const countdownEl = document.createElement('div');
+    countdownEl.className = 'countdown-val';
+    countdownEl.style.position = 'absolute';
+    countdownEl.style.zIndex = '50';
+    boardEl.appendChild(countdownEl);
+    
+    let count = 3;
+    countdownEl.textContent = count;
+    Sound.playTick();
+    
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownEl.textContent = count;
+            Sound.playTick();
+        } else {
+            clearInterval(interval);
+            countdownEl.remove();
+            
+            // Restore visibility
+            originalChildren.forEach(child => {
+                child.style.visibility = 'visible';
+            });
+            callback();
+        }
+    }, 700);
+};
+
 // Global Launcher
 window.addEventListener('DOMContentLoaded', () => {
     window.Dashboard = new NeuroDashboard();
 });
+

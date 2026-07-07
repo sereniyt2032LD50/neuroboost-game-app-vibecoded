@@ -35,6 +35,9 @@ class StroopGame {
         for (let btn of optionButtons) {
             btn.addEventListener('click', (e) => this.handleAnswer(e));
         }
+
+        // Bind keyboard event handler
+        this.boundKeyHandler = this.handleKeyDown.bind(this);
     }
 
     startGame() {
@@ -49,6 +52,13 @@ class StroopGame {
         
         if (this.timer) clearInterval(this.timer);
         this.timer = setInterval(() => this.tick(), 100);
+
+        // Bind hotkeys
+        window.addEventListener('keydown', this.boundKeyHandler);
+    }
+
+    cleanup() {
+        window.removeEventListener('keydown', this.boundKeyHandler);
     }
 
     updateStats() {
@@ -111,10 +121,33 @@ class StroopGame {
         this.questionStartTime = Date.now();
     }
 
-    handleAnswer(e) {
+    handleKeyDown(e) {
         if (this.timeRemaining <= 0) return;
         
-        const selectedColor = e.target.dataset.color;
+        const keyMap = {
+            '1': 'red',
+            '2': 'blue',
+            '3': 'green',
+            '4': 'yellow'
+        };
+        
+        const color = keyMap[e.key];
+        if (color) {
+            this.processAnswer(color);
+        }
+    }
+
+    handleAnswer(e) {
+        // Find dataset attribute on target or parent button
+        const btn = e.target.closest('.btn-stroop');
+        if (btn) {
+            const selectedColor = btn.dataset.color;
+            this.processAnswer(selectedColor);
+        }
+    }
+
+    processAnswer(selectedColor) {
+        if (this.timeRemaining <= 0) return;
         this.totalCount += 1;
         
         const elapsed = Date.now() - this.questionStartTime;
@@ -130,11 +163,16 @@ class StroopGame {
             this.score += points;
             Sound.playTone(600 + (points * 10), 'sine', 0.08, 0.08);
             this.triggerFlash('correct');
+            
+            // UX floating indicators
+            window.showFloatingIndicator(this.scoreDisplay, `+${points}`, true);
         } else {
             // Incorrect answer
             this.score = Math.max(0, this.score - 5);
             Sound.playIncorrect();
             this.triggerFlash('incorrect');
+            
+            window.showFloatingIndicator(this.scoreDisplay, `-5`, false);
             
             // Shake play board
             const board = document.querySelector('#screen-game-stroop .game-play-board');
@@ -158,6 +196,7 @@ class StroopGame {
 
     endGame() {
         clearInterval(this.timer);
+        this.cleanup();
         Sound.playGameOver();
         
         const isNewHigh = Storage.saveScore('stroop', this.score);

@@ -28,8 +28,13 @@ class SchulteGame {
         this.level = 1;
         this.lvl1Time = 0.0;
         this.elapsedTime = 0.0;
-        this.gameActive = true;
-        this.startLevel();
+        
+        // Show countdown first before loading level 1 grid
+        this.board.innerHTML = '';
+        window.runCountdown(this.board, () => {
+            this.gameActive = true;
+            this.startLevel();
+        });
     }
 
     startLevel() {
@@ -136,6 +141,9 @@ class SchulteGame {
             
             // Add 1.5s time penalty to current timer
             this.startTime -= 1500; 
+            
+            // UX floating indicator
+            window.showFloatingIndicator(this.timeDisplay, '+1.5s', false);
             
             // Flash red on incorrect tile
             tile.classList.add('incorrect');

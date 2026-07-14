@@ -3,10 +3,13 @@ class NeuroDashboard {
         this.navLogo = document.getElementById('nav-logo');
         this.btnNavDashboard = document.getElementById('btn-nav-dashboard');
         this.btnNavStats = document.getElementById('btn-nav-stats');
+        this.btnNavScience = document.getElementById('btn-nav-science');
+        this.themeBtn = document.getElementById('theme-btn');
         
         this.screens = {
             dashboard: document.getElementById('screen-dashboard'),
             stats: document.getElementById('screen-stats'),
+            science: document.getElementById('screen-science'),
             matrix: document.getElementById('screen-game-matrix'),
             stroop: document.getElementById('screen-game-stroop'),
             schulte: document.getElementById('screen-game-schulte'),
@@ -25,6 +28,18 @@ class NeuroDashboard {
         
         this.setupNavigation();
         this.initDashboard();
+        this.initTheme();
+    }
+
+    initTheme() {
+        const savedTheme = localStorage.getItem('nb_theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            this.themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        } else {
+            document.body.classList.remove('light-theme');
+            this.themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        }
     }
 
     setupNavigation() {
@@ -47,6 +62,32 @@ class NeuroDashboard {
             this.renderAnalytics();
         });
 
+        // Science Navigation Button
+        this.btnNavScience.addEventListener('click', () => {
+            Sound.playClick();
+            this.switchScreen('science');
+        });
+
+        // Footer Science Link
+        document.getElementById('footer-science-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            Sound.playClick();
+            this.switchScreen('science');
+        });
+
+        // Theme Toggle Button
+        this.themeBtn.addEventListener('click', () => {
+            Sound.playClick();
+            const isLight = document.body.classList.toggle('light-theme');
+            localStorage.setItem('nb_theme', isLight ? 'light' : 'dark');
+            this.themeBtn.innerHTML = isLight ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+            
+            // Re-render chart if analytics screen is currently open
+            if (this.screens.stats.classList.contains('active')) {
+                this.renderAnalytics();
+            }
+        });
+
         // Game Card play triggers
         const gameCards = document.querySelectorAll('.game-card');
         gameCards.forEach(card => {
@@ -66,15 +107,16 @@ class NeuroDashboard {
 
     switchScreen(screenKey) {
         // Update active nav button
+        this.btnNavDashboard.classList.remove('active');
+        this.btnNavStats.classList.remove('active');
+        this.btnNavScience.classList.remove('active');
+
         if (screenKey === 'dashboard') {
             this.btnNavDashboard.classList.add('active');
-            this.btnNavStats.classList.remove('active');
         } else if (screenKey === 'stats') {
-            this.btnNavDashboard.classList.remove('active');
             this.btnNavStats.classList.add('active');
-        } else {
-            this.btnNavDashboard.classList.remove('active');
-            this.btnNavStats.classList.remove('active');
+        } else if (screenKey === 'science') {
+            this.btnNavScience.classList.add('active');
         }
 
         // Switch screen active classes
@@ -268,10 +310,13 @@ class NeuroDashboard {
         const graphWidth = width - padding.left - padding.right;
         const graphHeight = height - padding.top - padding.bottom;
 
+        // Theme adjustments
+        const isLight = document.body.classList.contains('light-theme');
+
         // Draw Y-axis grid lines (0, 250, 500, 750, 1000 index)
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 1;
-        ctx.fillStyle = '#8b9bb4';
+        ctx.fillStyle = isLight ? '#5e6b7e' : '#8b9bb4';
         ctx.font = '11px Share Tech Mono, monospace';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
@@ -312,7 +357,7 @@ class NeuroDashboard {
             ctx.closePath();
 
             const fillGrad = ctx.createLinearGradient(0, padding.top, 0, padding.top + graphHeight);
-            fillGrad.addColorStop(0, 'rgba(0, 242, 254, 0.15)');
+            fillGrad.addColorStop(0, isLight ? 'rgba(0, 102, 204, 0.1)' : 'rgba(0, 242, 254, 0.15)');
             fillGrad.addColorStop(1, 'rgba(157, 78, 221, 0.0)');
             ctx.fillStyle = fillGrad;
             ctx.fill();
@@ -330,8 +375,8 @@ class NeuroDashboard {
         
         ctx.lineWidth = 3;
         const lineGrad = ctx.createLinearGradient(padding.left, 0, width - padding.right, 0);
-        lineGrad.addColorStop(0, '#00f2fe');
-        lineGrad.addColorStop(1, '#9d4edd');
+        lineGrad.addColorStop(0, isLight ? '#0066cc' : '#00f2fe');
+        lineGrad.addColorStop(1, isLight ? '#7b2cbf' : '#9d4edd');
         ctx.strokeStyle = lineGrad;
         ctx.stroke();
 
@@ -343,24 +388,24 @@ class NeuroDashboard {
             // Outer glow ring
             ctx.beginPath();
             ctx.arc(cx, cy, 7, 0, 2 * Math.PI);
-            ctx.fillStyle = 'rgba(0, 242, 254, 0.3)';
+            ctx.fillStyle = isLight ? 'rgba(0, 102, 204, 0.15)' : 'rgba(0, 242, 254, 0.3)';
             ctx.fill();
 
             // Inner solid dot
             ctx.beginPath();
             ctx.arc(cx, cy, 4, 0, 2 * Math.PI);
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = isLight ? '#0066cc' : '#ffffff';
             ctx.fill();
 
             // Label text (raw score)
-            ctx.fillStyle = '#f1f3f9';
+            ctx.fillStyle = isLight ? '#12141c' : '#f1f3f9';
             ctx.font = '10px Share Tech Mono, monospace';
             ctx.textAlign = 'center';
             ctx.fillText(pt.scoreRaw, cx, cy - 12);
 
             // Short Game Initials on X-axis
             const labelInitials = pt.label.split(' ').map(w => w[0]).join('');
-            ctx.fillStyle = '#8b9bb4';
+            ctx.fillStyle = isLight ? '#5e6b7e' : '#8b9bb4';
             ctx.font = '11px Outfit, sans-serif';
             ctx.fillText(labelInitials, cx, padding.top + graphHeight + 18);
         });
@@ -438,4 +483,3 @@ window.runCountdown = function(boardEl, callback) {
 window.addEventListener('DOMContentLoaded', () => {
     window.Dashboard = new NeuroDashboard();
 });
-

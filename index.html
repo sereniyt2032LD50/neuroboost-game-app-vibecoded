@@ -18,7 +18,11 @@
         <nav class="nav-links">
             <button class="btn-nav active" id="btn-nav-dashboard"><i class="fa-solid fa-table-cells-large"></i> Dashboard</button>
             <button class="btn-nav" id="btn-nav-stats"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+            <button class="btn-nav" id="btn-nav-science"><i class="fa-solid fa-graduation-cap"></i> Science</button>
         </nav>
+        <button class="btn-theme" id="theme-btn" title="Toggle Light/Dark Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
     </header>
 
     <!-- Main Container -->
@@ -292,7 +296,61 @@
             </div>
         </section>
 
+        <!-- SCIENCE SCREEN -->
+        <section id="screen-science" class="screen">
+            <div class="welcome-section" style="margin-bottom: 2rem;">
+                <h1>The Cognitive Science</h1>
+                <p>Understand the neuro-scientific principles behind each training activity.</p>
+            </div>
+            <div class="science-grid">
+                <!-- Card 1: Memory Matrix -->
+                <div class="glass-card science-card">
+                    <div class="science-header">
+                        <i class="fa-solid fa-border-all science-icon"></i>
+                        <h3>Memory Matrix & Visuospatial Memory</h3>
+                    </div>
+                    <p>This activity is inspired by spatial recall tasks, such as the Corsi Block-Tapping Test. It targets the <strong>visuospatial sketchpad</strong>—the component of working memory responsible for temporarily storing and manipulating visual-spatial patterns.</p>
+                    <p>Developing spatial memory enhances your ability to navigate environments, remember locations, and perform mental spatial rotations.</p>
+                </div>
+                <!-- Card 2: Stroop Reflex -->
+                <div class="glass-card science-card">
+                    <div class="science-header">
+                        <i class="fa-solid fa-bolt science-icon"></i>
+                        <h3>Stroop Reflex & Cognitive Control</h3>
+                    </div>
+                    <p>Based on the classic <strong>Stroop Effect</strong> (first described by John Ridley Stroop in 1935). The task measures selective attention, cognitive flexibility, and response inhibition.</p>
+                    <p>When spelling and font color mismatch, your brain experiences cognitive interference. Processing the word's meaning is automatic, while identifying the font color requires deliberate executive control. Training this helps you filter distractions and suppress impulsive reactions.</p>
+                </div>
+                <!-- Card 3: Schulte Grid -->
+                <div class="glass-card science-card">
+                    <div class="science-header">
+                        <i class="fa-solid fa-arrow-down-1-9 science-icon"></i>
+                        <h3>Schulte Grid & Peripheral Scanning</h3>
+                    </div>
+                    <p>Originally designed as a diagnostic test for military pilot training, the Schulte Grid trains <strong>peripheral vision</strong>, sustained focus, and visual search speed.</p>
+                    <p>By keeping your eyes fixed on the center of the grid and locating numbers sequentially using your peripheral scanning, you increase the field of visual search. This improves speed-reading skills and visual scanning efficiency.</p>
+                </div>
+                <!-- Card 4: Equation Rush -->
+                <div class="glass-card science-card">
+                    <div class="science-header">
+                        <i class="fa-solid fa-calculator science-icon"></i>
+                        <h3>Equation Rush & Working Memory</h3>
+                    </div>
+                    <p>Arithmetic rush tasks stress rapid mathematical processing and <strong>cognitive gating</strong>—the ability to quickly load, manipulate, and update numerical representations in working memory while discarding old calculations.</p>
+                    <p>Regular practice of speed calculations boosts mental processing speed, numerical literacy, and executive concentration under pressure.</p>
+                </div>
+            </div>
+        </section>
+
     </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 NeuroBoost. Designed for Cognitive Enhancement.</p>
+            <p><a href="#" id="footer-science-link"><i class="fa-solid fa-graduation-cap"></i> Science Behind the Games</a></p>
+        </div>
+    </footer>
 
     <!-- Sound Toggle -->
     <div class="sound-toggle" id="sound-btn" title="Toggle Sound">
